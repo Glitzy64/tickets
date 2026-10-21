@@ -6,25 +6,55 @@ const musicToggle = document.getElementById("musicToggle");
 const statusText = document.getElementById("status");
 const yesButton = document.getElementById("yesButton");
 const noButton = document.getElementById("noButton");
+const loopMessage = document.getElementById("loopMessage");
+const lyricsOverlay = document.getElementById("lyricsOverlay");
+const lyricsText = document.getElementById("lyricsText");
 
 const pages = [...document.querySelectorAll(".page[data-page]")];
 
 let currentPage = 0;
 let noCount = 0;
+let messageIndex = 0;
+let lastLyricIndex = -1;
+let messageTimer = null;
+let statusTimer = null;
 
-// EMAILJS SETTINGS
+// EMAILJS SETTINGS — KEEP THESE MATCHED TO YOUR ACCOUNT
 const EMAILJS_SERVICE_ID = "service_h7frpgp";
 const EMAILJS_TEMPLATE_ID = "template_x8ibc85";
-const EMAILJS_PUBLIC_KEY = "CQ82f4ugQnya-3Vbv" 
 
-// OPEN THE PINK BOOK
+// These are original romantic captions, not the song's lyrics.
+// Replace them with lyrics you provide if you want the actual words.
+const lyricLines = [
+  "Every little moment feels sweeter with you. ♡",
+  "If I could choose again, I'd still choose you. 💗",
+  "Somehow, you make ordinary days feel magical. ✨",
+  "Let the music play while we make a memory. 🎶",
+  "A little movie, a little music, and you. 🍿",
+  "Maybe this is my favorite kind of story. 🌷",
+  "And if the song ends, I hope our story doesn't. ♡",
+  "Just you, me, and a moment worth keeping. 💌"
+];
+
+const loopingMessages = [
+  "Psst... you're my favorite person ♡",
+  "Imagine us singing along together 🎶",
+  "A date with you sounds pretty perfect 💗",
+  "I saved a little place for you in my heart 🌷",
+  "Just one YES could make my day 🥺",
+  "You + me + a movie = a happy little memory 🍿",
+  "This tiny book was made just for you 💌",
+  "Okay, but imagine how cute we'd look together ♡"
+];
+
+// OPEN THE BOOK
 openBook.addEventListener("click", async () => {
   book.classList.add("open");
 
   try {
     await song.play();
-    musicToggle.textContent = "Ⅱ Pause music";
-  } catch {
+  } catch (error) {
+    console.log("Music needs to be started manually:", error);
     musicToggle.textContent = "▶ Play music";
   }
 });
@@ -34,15 +64,77 @@ musicToggle.addEventListener("click", async () => {
   if (song.paused) {
     try {
       await song.play();
-      musicToggle.textContent = "Ⅱ Pause music";
-    } catch {
+    } catch (error) {
+      console.error("Unable to play music:", error);
       musicToggle.textContent = "▶ Play music";
     }
   } else {
     song.pause();
-    musicToggle.textContent = "▶ Play music";
   }
 });
+
+// KEEP THE RECORD, BUTTON, AND OVERLAY IN SYNC
+function updateMusicDisplay() {
+  const playing = !song.paused && !song.ended;
+
+  musicToggle.textContent = playing
+    ? "Ⅱ Pause music"
+    : "▶ Play music";
+
+  book.classList.toggle("music-playing", playing);
+
+  lyricsOverlay.hidden = !(playing && book.classList.contains("open"));
+
+  if (playing && lastLyricIndex === -1) {
+    updateLyricCaption();
+  }
+}
+
+song.addEventListener("play", updateMusicDisplay);
+song.addEventListener("pause", updateMusicDisplay);
+song.addEventListener("ended", updateMusicDisplay);
+
+// CHANGE CAPTIONS ACCORDING TO THE SONG'S PLAYBACK TIME
+function updateLyricCaption() {
+  if (!Number.isFinite(song.currentTime)) return;
+
+  // Each caption lasts approximately 5 seconds.
+  // These are timed captions, not verified song-lyric timestamps.
+  const intervalSeconds = 5;
+  const index =
+    Math.floor(song.currentTime / intervalSeconds) % lyricLines.length;
+
+  if (index === lastLyricIndex) return;
+
+  lastLyricIndex = index;
+  lyricsText.textContent = lyricLines[index];
+
+  lyricsOverlay.classList.remove("lyric-change");
+  void lyricsOverlay.offsetWidth;
+  lyricsOverlay.classList.add("lyric-change");
+}
+
+song.addEventListener("timeupdate", updateLyricCaption);
+
+song.addEventListener("seeked", () => {
+  lastLyricIndex = -1;
+  updateLyricCaption();
+});
+
+// LOOP THE ROMANTIC MESSAGE UNDER YES / NO
+function changeLoopMessage() {
+  if (!loopMessage) return;
+
+  messageIndex = (messageIndex + 1) % loopingMessages.length;
+
+  loopMessage.classList.remove("changing");
+  void loopMessage.offsetWidth;
+
+  loopMessage.textContent = loopingMessages[messageIndex];
+  loopMessage.classList.add("changing");
+}
+
+messageTimer = setInterval(changeLoopMessage, 3200);
 
 // SHOW A BOOK PAGE
 function showPage(index) {
@@ -65,6 +157,9 @@ function showPage(index) {
       element.style.animation = "";
     });
   }
+
+  // Keep the overlay on top of the open book only.
+  updateMusicDisplay();
 }
 
 // NEXT PAGE BUTTONS
@@ -81,7 +176,7 @@ document.querySelectorAll("[data-back]").forEach((button) => {
   });
 });
 
-// RETURN TO PAGE 1
+// RETURN TO PAGE ONE
 document.getElementById("restartButton").addEventListener("click", () => {
   showPage(0);
 });
@@ -97,7 +192,9 @@ noButton.addEventListener("click", () => {
     "Are you sure? 🥺",
     "Think about the tickets! 💗",
     "One little date? 🌷",
-    "I would love to go with you ♡"
+    "I would love to go with you ♡",
+    "The YES button is getting bigger! 😭💗",
+    "I'll keep asking nicely... 🥹"
   ];
 
   statusText.textContent =
@@ -109,7 +206,8 @@ noButton.addEventListener("click", () => {
 
 // YES BUTTON: SEND EMAIL NOTIFICATION
 yesButton.addEventListener("click", async () => {
-  // Prevent repeated clicks while the email is being sent.
+  if (yesButton.disabled) return;
+
   yesButton.disabled = true;
   noButton.disabled = true;
   statusText.textContent = "Sending your answer... 💌";
@@ -126,7 +224,8 @@ yesButton.addEventListener("click", async () => {
       EMAILJS_TEMPLATE_ID,
       {
         subject: "She said YES! 💗",
-        message: "She accepted your invitation on your romantic book website!",
+        message:
+          "She accepted your invitation on your romantic book website!",
         answer: "YES 💗",
         response: "YES",
         date: "Friday, October 30, 2026"
@@ -135,6 +234,7 @@ yesButton.addEventListener("click", async () => {
 
     emailSent = true;
     console.log("EmailJS notification sent:", response.status);
+
     statusText.textContent = "YES! Email notification sent! 💗💌";
   } catch (error) {
     console.error("EmailJS notification failed:", error);
@@ -143,15 +243,13 @@ yesButton.addEventListener("click", async () => {
       "You said YES! 💗 The email couldn't be sent, but let's continue.";
   }
 
-  // Turn to Page 2 whether or not the email succeeded.
   setTimeout(() => {
     showPage(1);
-    statusText.textContent = "";
 
+    statusText.textContent = "";
     yesButton.disabled = false;
     noButton.disabled = false;
 
-    // Reset button size for when Page 1 is revisited.
     yesButton.style.transform = "";
     noButton.style.transform = "";
     noCount = 0;
@@ -202,3 +300,7 @@ videoInput.addEventListener("change", () => {
   videoPreview.hidden = false;
   videoPreview.load();
 });
+
+// INITIAL STATE
+showPage(0);
+updateMusicDisplay();

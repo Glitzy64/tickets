@@ -4,17 +4,22 @@ const openBook = document.getElementById("openBook");
 const song = document.getElementById("song");
 const musicToggle = document.getElementById("musicToggle");
 const statusText = document.getElementById("status");
+const yesButton = document.getElementById("yesButton");
+const noButton = document.getElementById("noButton");
 
 const pages = [...document.querySelectorAll(".page[data-page]")];
 
 let currentPage = 0;
 let noCount = 0;
 
+// EMAILJS SETTINGS
+const EMAILJS_SERVICE_ID = "service_h7frpgp";
+const EMAILJS_TEMPLATE_ID = "template_x8ibc85";
+
 // OPEN THE PINK BOOK
 openBook.addEventListener("click", async () => {
   book.classList.add("open");
 
-  // Try to start music after the user's click.
   try {
     await song.play();
     musicToggle.textContent = "Ⅱ Pause music";
@@ -47,13 +52,13 @@ function showPage(index) {
     page.classList.toggle("active", i === currentPage);
   });
 
-  // Restart the entrance animations when returning to Page 1.
   if (currentPage === 0) {
     const tickets = document.querySelector(".tickets");
     const cartoon = document.querySelector(".cartoon");
 
     [tickets, cartoon].forEach((element) => {
       if (!element) return;
+
       element.style.animation = "none";
       void element.offsetWidth;
       element.style.animation = "";
@@ -81,11 +86,8 @@ document.getElementById("restartButton").addEventListener("click", () => {
 });
 
 // NO BUTTON: YES BUTTON GROWS
-document.getElementById("noButton").addEventListener("click", () => {
+noButton.addEventListener("click", () => {
   noCount++;
-
-  const noButton = document.getElementById("noButton");
-  const yesButton = document.getElementById("yesButton");
 
   yesButton.style.transform =
     `scale(${Math.min(1 + noCount * 0.12, 1.65)})`;
@@ -104,69 +106,55 @@ document.getElementById("noButton").addEventListener("click", () => {
     `translateX(${noCount % 2 ? 6 : -6}px)`;
 });
 
-// YES BUTTON
-document.getElementById("yesButton").addEventListener("click", async () => {
-  const yesButton = document.getElementById("yesButton");
-
+// YES BUTTON: SEND EMAIL NOTIFICATION
+yesButton.addEventListener("click", async () => {
+  // Prevent repeated clicks while the email is being sent.
   yesButton.disabled = true;
-  statusText.textContent = "You said YES! 💗";
+  noButton.disabled = true;
+  statusText.textContent = "Sending your answer... 💌";
 
-  // EMAILJS SETUP:
-  // Replace these values after creating your EmailJS account.
-  const PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY";
-  const SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
-  const TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
+  let emailSent = false;
 
-  const emailConfigured = [
-    PUBLIC_KEY,
-    SERVICE_ID,
-    TEMPLATE_ID
-  ].every(value => value && !value.startsWith("YOUR_"));
-
-  if (emailConfigured) {
-    try {
-      const response = await fetch(
-        "https://api.emailjs.com/api/v1.0/email/send",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            service_id: SERVICE_ID,
-            template_id: TEMPLATE_ID,
-            user_id: PUBLIC_KEY,
-            template_params: {
-              subject: "She said YES! 💗",
-              message:
-                "She accepted your invitation on your romantic book website!",
-              answer: "YES",
-              date: "Friday, October 30, 2026"
-            }
-          })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Email could not be sent.");
-      }
-
-      statusText.textContent = "YES! Notification sent! 💌";
-    } catch (error) {
-      statusText.textContent =
-        "YES! 💗 Your email notification needs checking.";
+  try {
+    if (!window.emailjs) {
+      throw new Error("EmailJS library did not load.");
     }
-  } else {
+
+    const response = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      {
+        subject: "She said YES! 💗",
+        message: "She accepted your invitation on your romantic book website!",
+        answer: "YES 💗",
+        response: "YES",
+        date: "Friday, October 30, 2026"
+      }
+    );
+
+    emailSent = true;
+    console.log("EmailJS notification sent:", response.status);
+    statusText.textContent = "YES! Email notification sent! 💗💌";
+  } catch (error) {
+    console.error("EmailJS notification failed:", error);
+
     statusText.textContent =
-      "YES! 💗 Email notification needs to be configured.";
+      "You said YES! 💗 The email couldn't be sent, but let's continue.";
   }
 
-  // Open Page 2 after the acceptance animation.
+  // Turn to Page 2 whether or not the email succeeded.
   setTimeout(() => {
     showPage(1);
     statusText.textContent = "";
+
     yesButton.disabled = false;
-  }, 1200);
+    noButton.disabled = false;
+
+    // Reset button size for when Page 1 is revisited.
+    yesButton.style.transform = "";
+    noButton.style.transform = "";
+    noCount = 0;
+  }, emailSent ? 1200 : 1800);
 });
 
 // FOUR PHOTO PREVIEWS

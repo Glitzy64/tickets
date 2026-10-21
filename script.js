@@ -15,6 +15,7 @@ let noCount = 0;
 // EMAILJS SETTINGS
 const EMAILJS_SERVICE_ID = "service_h7frpgp";
 const EMAILJS_TEMPLATE_ID = "template_x8ibc85";
+const EMAILJS_PUBLIC_KEY = "CQ82f4ugQnya-3Vbv" 
 
 // OPEN THE PINK BOOK
 openBook.addEventListener("click", async () => {

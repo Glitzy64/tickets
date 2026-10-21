@@ -7,6 +7,15 @@
   <meta name="theme-color" content="#f49ac2">
   <title>A Little Invitation 💗</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- EmailJS library -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    emailjs.init({
+      publicKey: "BFjMowDGsf1l_Eb"
+    });
+  </script>
+
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -36,6 +45,7 @@
           </div>
 
           <p class="record-caption">a little nostalgia ♡</p>
+
           <button id="musicToggle" class="music-toggle" type="button">
             ▶ Play music
           </button>
@@ -81,7 +91,7 @@
                 </button>
               </div>
 
-              <p id="status" class="status" role="status"></p>
+              <p id="status" class="status" role="status" aria-live="polite"></p>
             </div>
           </article>
 

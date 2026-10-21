@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,6 @@
   <title>A Little Invitation 💗</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- EmailJS library -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     emailjs.init({
@@ -22,20 +20,22 @@
   <main class="scene">
     <p class="hint" id="hint">A little something for you ♡</p>
 
-    <section class="book" id="book">
+    <section class="book" id="book" aria-label="A romantic invitation book">
 
-      <!-- PINK FRONT COVER -->
-      <button class="front-cover" id="openBook" type="button">
+      <button class="front-cover" id="openBook" type="button"
+        aria-label="Open the invitation book">
+        <span class="cover-decoration">✦ ♡ ✦</span>
         <span class="cover-heart">♡</span>
         <span class="cover-title">A Little<br>Invitation</span>
         <span class="cover-subtitle">Open me 💗</span>
+        <span class="cover-author">made just for you</span>
       </button>
 
-      <!-- INSIDE OF THE BOOK -->
       <div class="inside" id="inside">
 
-        <!-- LEFT: BROWN COVER AND ROTATING RECORD -->
         <aside class="inside-cover">
+          <div class="inside-cover-title">Our little soundtrack</div>
+
           <div class="cd-envelope">
             <div class="envelope-back"></div>
             <div class="vinyl">
@@ -44,25 +44,28 @@
             <div class="envelope-flap"></div>
           </div>
 
-          <p class="record-caption">a little nostalgia ♡</p>
+          <p class="record-caption">press play and stay awhile ♡</p>
 
           <button id="musicToggle" class="music-toggle" type="button">
             ▶ Play music
           </button>
 
-          <audio id="song" loop preload="none">
+          <audio id="song" loop preload="metadata">
             <source src="assets/teenage_dirtbag.mp3" type="audio/mpeg">
+            Your browser does not support audio.
           </audio>
+
+          <p class="inside-cover-footer">side A: you & me</p>
         </aside>
 
-        <!-- RIGHT: FOUR BOOK PAGES -->
         <div class="page-stack">
 
           <!-- PAGE 1 -->
           <article class="page page-one active" data-page="0">
             <div class="page-content">
-              <p class="eyebrow">I have a question for you...</p>
+              <div class="page-decoration">♡</div>
 
+              <p class="eyebrow">A little question from my heart</p>
               <h1>Will you go on a date with me?</h1>
 
               <img
@@ -91,18 +94,24 @@
                 </button>
               </div>
 
-              <p id="status" class="status" role="status" aria-live="polite"></p>
+              <p id="loopMessage" class="loop-message">
+                Psst... you're my favorite person ♡
+              </p>
+
+              <p id="status" class="status" role="status"
+                aria-live="polite"></p>
             </div>
           </article>
 
           <!-- PAGE 2 -->
           <article class="page page-two" data-page="1" hidden>
             <div class="page-content">
-              <p class="eyebrow">Our little plan</p>
+              <p class="eyebrow">Chapter one · our little plan</p>
               <h2>Save the date ♡</h2>
 
               <div class="date-layout">
                 <div class="cinema">
+                  <div class="cinema-screen">NOW SHOWING<br>YOU & ME</div>
                   <div class="seat-row">
                     <span></span><span></span>
                   </div>
@@ -119,6 +128,10 @@
                   <p class="calendar-caption">Just you and me ♡</p>
                 </div>
               </div>
+
+              <p class="page-note">
+                One little date, a thousand little memories. 💗
+              </p>
             </div>
 
             <div class="page-nav">
@@ -130,7 +143,7 @@
           <!-- PAGE 3 -->
           <article class="page page-three" data-page="2" hidden>
             <div class="page-content memory-page">
-              <p class="eyebrow">My favorite person</p>
+              <p class="eyebrow">Chapter two · my favorite person</p>
 
               <div class="photo-frame">
                 <img src="assets/us.jpg" alt="A photo of us">
@@ -138,6 +151,7 @@
 
               <h2>May we have a great night.</h2>
               <p>And make another little memory together. 💗</p>
+              <p class="handwritten">With you, even ordinary days feel special. ♡</p>
             </div>
 
             <div class="page-nav">
@@ -151,7 +165,7 @@
           <!-- PAGE 4 -->
           <article class="page page-four" data-page="3" hidden>
             <div class="page-content memory-page">
-              <p class="eyebrow">A little memory corner</p>
+              <p class="eyebrow">Chapter three · little things to keep</p>
               <h2>Our memories ♡</h2>
 
               <p class="media-help">
@@ -185,7 +199,8 @@
               </div>
 
               <label class="video-slot">
-                <input id="videoInput" type="file" accept="video/*" capture="environment">
+                <input id="videoInput" type="file" accept="video/*"
+                  capture="environment">
                 ＋ Add or record one video
               </label>
 
@@ -206,9 +221,18 @@
 
         </div>
       </div>
+
+      <!-- MUSIC-SYNCHRONIZED ROMANTIC TEXT OVERLAY -->
+      <div class="lyrics-overlay" id="lyricsOverlay" aria-live="polite"
+        aria-label="Romantic captions that change with the music" hidden>
+        <span class="lyrics-sparkle">✧</span>
+        <p id="lyricsText">Every little moment feels sweeter with you. ♡</p>
+        <span class="lyrics-sparkle">✧</span>
+      </div>
+
     </section>
 
-    <p class="footer-note">made with a little love ♡</p>
+    <p class="footer-note">a little book, a little song, a lot of love ♡</p>
   </main>
 </body>
 </html>

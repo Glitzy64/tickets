@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f49ac2">
+  <title>A Little Invitation 💗</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="scene">
+    <p class="hint" id="hint">A little something for you ♡</p>
+
+    <section class="book" id="book">
+
+      <!-- PINK FRONT COVER -->
+      <button class="front-cover" id="openBook" type="button">
+        <span class="cover-heart">♡</span>
+        <span class="cover-title">A Little<br>Invitation</span>
+        <span class="cover-subtitle">Open me 💗</span>
+      </button>
+
+      <!-- INSIDE OF THE BOOK -->
+      <div class="inside" id="inside">
+
+        <!-- LEFT: BROWN COVER AND ROTATING RECORD -->
+        <aside class="inside-cover">
+          <div class="cd-envelope">
+            <div class="envelope-back"></div>
+            <div class="vinyl">
+              <div class="vinyl-center"></div>
+            </div>
+            <div class="envelope-flap"></div>
+          </div>
+
+          <p class="record-caption">a little nostalgia ♡</p>
+          <button id="musicToggle" class="music-toggle" type="button">
+            ▶ Play music
+          </button>
+
+          <audio id="song" loop preload="none">
+            <source src="assets/teenage_dirtbag.mp3" type="audio/mpeg">
+          </audio>
+        </aside>
+
+        <!-- RIGHT: FOUR BOOK PAGES -->
+        <div class="page-stack">
+
+          <!-- PAGE 1 -->
+          <article class="page page-one active" data-page="0">
+            <div class="page-content">
+              <p class="eyebrow">I have a question for you...</p>
+
+              <h1>Will you go on a date with me?</h1>
+
+              <img
+                class="tickets"
+                src="assets/seventeen_tickets.PNG"
+                alt="Two pink SEVENTEEN tickets"
+              >
+
+              <img
+                class="cartoon"
+                src="assets/us.png"
+                alt="Cartoon of us"
+              >
+
+              <p class="small-note">
+                A little music, a little movie, and you. ♡
+              </p>
+
+              <div class="choice-row">
+                <button id="yesButton" class="yes-button" type="button">
+                  YES 💗
+                </button>
+
+                <button id="noButton" class="no-button" type="button">
+                  No 🙈
+                </button>
+              </div>
+
+              <p id="status" class="status" role="status"></p>
+            </div>
+          </article>
+
+          <!-- PAGE 2 -->
+          <article class="page page-two" data-page="1" hidden>
+            <div class="page-content">
+              <p class="eyebrow">Our little plan</p>
+              <h2>Save the date ♡</h2>
+
+              <div class="date-layout">
+                <div class="cinema">
+                  <div class="seat-row">
+                    <span></span><span></span>
+                  </div>
+                  <div class="seat-row">
+                    <span></span><span></span>
+                  </div>
+                  <p>Movie date 🍿</p>
+                </div>
+
+                <div class="calendar">
+                  <p class="month">OCTOBER 2026</p>
+                  <p class="weekday">FRIDAY</p>
+                  <strong>30</strong>
+                  <p class="calendar-caption">Just you and me ♡</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="page-nav">
+              <button class="back-button" data-back type="button">← Back</button>
+              <button class="next-button" data-next type="button">Next →</button>
+            </div>
+          </article>
+
+          <!-- PAGE 3 -->
+          <article class="page page-three" data-page="2" hidden>
+            <div class="page-content memory-page">
+              <p class="eyebrow">My favorite person</p>
+
+              <div class="photo-frame">
+                <img src="assets/us.jpg" alt="A photo of us">
+              </div>
+
+              <h2>May we have a great night.</h2>
+              <p>And make another little memory together. 💗</p>
+            </div>
+
+            <div class="page-nav">
+              <button class="back-button" data-back type="button">← Back</button>
+              <button class="next-button" data-next type="button">
+                Our memories →
+              </button>
+            </div>
+          </article>
+
+          <!-- PAGE 4 -->
+          <article class="page page-four" data-page="3" hidden>
+            <div class="page-content memory-page">
+              <p class="eyebrow">A little memory corner</p>
+              <h2>Our memories ♡</h2>
+
+              <p class="media-help">
+                Take a picture or choose one from your device.
+              </p>
+
+              <div class="photo-grid">
+                <label class="media-slot">
+                  <input type="file" accept="image/*" capture="environment">
+                  <span>＋</span><small>Photo 1</small>
+                  <img alt="Photo 1 preview">
+                </label>
+
+                <label class="media-slot">
+                  <input type="file" accept="image/*" capture="environment">
+                  <span>＋</span><small>Photo 2</small>
+                  <img alt="Photo 2 preview">
+                </label>
+
+                <label class="media-slot">
+                  <input type="file" accept="image/*" capture="environment">
+                  <span>＋</span><small>Photo 3</small>
+                  <img alt="Photo 3 preview">
+                </label>
+
+                <label class="media-slot">
+                  <input type="file" accept="image/*" capture="environment">
+                  <span>＋</span><small>Photo 4</small>
+                  <img alt="Photo 4 preview">
+                </label>
+              </div>
+
+              <label class="video-slot">
+                <input id="videoInput" type="file" accept="video/*" capture="environment">
+                ＋ Add or record one video
+              </label>
+
+              <video id="videoPreview" controls playsinline hidden></video>
+
+              <p class="media-help">
+                Your selected media previews in this browser.
+              </p>
+            </div>
+
+            <div class="page-nav">
+              <button class="back-button" data-back type="button">← Back</button>
+              <button class="next-button" id="restartButton" type="button">
+                Read again ♡
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">made with a little love ♡</p>
+  </main>
+</body>
+</html>

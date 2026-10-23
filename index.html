@@ -232,7 +232,26 @@
 
     </section>
 
-    <p class="footer-note">a little book, a little song, a lot of love ♡</p>
+    <p class="footer-note">a little book, a little song, a lot of love 🩷</p>
   </main>
+
+// Falling emojis
+        const emojis = ["💖", "🌸", "💕", "🩷", "💗", "🎀", "🌷"];
+        
+        for (let i = 0; i < 40; i++) {
+            let e = document.createElement("div");
+            e.className = "emoji";
+            e.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            e.style.left = Math.random() * 100 + "vw";
+            e.style.animationDuration = (Math.random() * 6 + 6) + "s";
+            e.style.animationDelay = Math.random() * 6 + "s";
+            e.style.fontSize = (18 + Math.random() * 18) + "px";
+            
+            document.body.appendChild(e);
+        }
+    </script>
+    
 </body>
-</html>
+
+  </html>
